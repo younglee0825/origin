@@ -2,6 +2,7 @@ package carrot.app.mapper;
 
 import carrot.app.User.UserVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface UserMapper {
@@ -10,7 +11,6 @@ public interface UserMapper {
     int countUserByNickname(String unick);
     int countUserByEmail(String uemail);
 
-    void updateProfileNickname(String new_nick, String past_nick);
+    void updateProfileNickname(@Param("new_nick") String new_nick, @Param("past_nick") String past_nick);
 
-    Integer getUserNumByUserNick(String nickname);
 }

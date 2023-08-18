@@ -1,10 +1,12 @@
 package carrot.app.User;
 
+import carrot.app.Profile.ProfileVo;
 import carrot.app.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.jdbc.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.spel.ast.NullLiteral;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,12 +29,10 @@ public class UserService implements UserDetailsService{
 
     @Transactional
     public void joinUser(UserVo userVo){
-        System.out.println(userVo);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         userVo.setUpwd(passwordEncoder.encode(userVo.getPassword()));
         userVo.setAuth("USER");
         userMapper.saveUser(userVo);
-        //System.out.println(userVo);
     }
 
     @Override

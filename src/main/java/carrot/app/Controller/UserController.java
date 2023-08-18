@@ -1,9 +1,12 @@
 package carrot.app.Controller;
 
 import carrot.app.Exception.UserException;
+import carrot.app.Profile.ProfileService;
+import carrot.app.Profile.ProfileVo;
 import carrot.app.User.User;
 import carrot.app.User.UserService;
 import carrot.app.User.UserVo;
+import carrot.app.mapper.ProfileMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +24,13 @@ import java.security.Principal;
 public class UserController {
 
     @Autowired
+    private final ProfileService profileService;
+
+    @Autowired
     UserService userService;
+
+    @Autowired
+    private final ProfileMapper profileMapper;
 
  //local:8080/hello치면 이거 나옴
     @GetMapping("/hello")
@@ -64,6 +73,17 @@ public class UserController {
    public UserVo userAccess(Model model, Authentication authentication) {
        //Authentication 객체를 통해 유저 정보를 가져올 수 있다.
        UserVo userVo = (UserVo) authentication.getPrincipal();  //userDetail 객체를 가져옴
+       System.out.println(userVo.getUnum());
+
+       //ToDo: Profile num 적용 시키기 -> 만약에 ProfileVo 있으면 패스, 없으면 만들기
+       ProfileVo profileVo = (profileService.getProfileByUserNum(userVo.getUnum()));
+       if(profileVo.getUser_num()==null){
+           profileVo.setUser_num(userVo.getUnum());
+           profileVo.setUser_nick(userVo.getUnick());
+           profileMapper.saveProfile(profileVo);
+       }
+       System.out.println(profileVo);
+
        model.addAttribute("info", userVo.getUemail() +"의 "+ userVo.getUname()+ "님"); //유저 아이디
        return userVo;
    }
@@ -80,7 +100,6 @@ public class UserController {
        if(upwd.equals(upwd2)){
            userService.joinUser(userVo);
            System.out.println(userVo);
-
            return userVo;
        }else{
            throw new UserException("비밀번호가 일치하지 않습니다.");

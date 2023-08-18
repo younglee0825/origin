@@ -21,6 +21,7 @@ public class ProfileVo {
     @Column(name = "myPage")
     private Long profile;
     private String goal;
+    private byte[] image;
 
 //    public ProfileVo(MyPage mypage){
 //        this.goal = myPage.getgoal();

@@ -33,5 +33,8 @@ public class Profile implements Serializable {
     @Column(name="myPage")
     private Long profile;
     private String goal;
+
+    @Lob
+    private byte[] image;
 }
 
